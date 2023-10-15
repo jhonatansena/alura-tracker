@@ -2,7 +2,7 @@
       <div class="column is-three-quarter content">
         <Forms @toSaveTask="saveTask"/>
         <div class="lista">
-          <Task v-for="(task, index) in tasks" :key="index" :task="task"/>
+          <Task v-for="(task, index) in reverseTasks" :key="index" :task="task"/>
           <Box v-if="emptyList">
           Você não está muito produtivo hoje :(
           </Box>
@@ -31,6 +31,9 @@
       computed: {
         emptyList (): boolean {
           return this.tasks.length === 0
+        },
+        reverseTasks (): ITask[] {
+            return this.tasks.slice().reverse()
         }
       },
       methods: {
