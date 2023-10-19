@@ -33,16 +33,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import IProject from '../interfaces/IProject'
+import { useStore } from '@/store'
 
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: 'Project',
     data() {
         return {
-            projectName: "",
-            projects: [] as IProject[]
+            projectName: ""
         }
     },
     methods: {
@@ -53,7 +53,7 @@ export default defineComponent({
                 startDate: this.formatDate(new Date())
             }
 
-            this.projects.push(project)
+            this.store.commit('ADD_PROJECT', project)
             this.projectName=''
         },
         formatDate(date: Date): string {
@@ -62,6 +62,13 @@ export default defineComponent({
             const year = date.getFullYear()
             return `${day}/${month}/${year}`
          }
+    },
+    setup () {
+        const store = useStore()
+        return {
+            store,
+            projects: computed(() => store.state.projects)
+        }
     }
 })
 </script>
