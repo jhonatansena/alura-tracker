@@ -8,7 +8,7 @@
                 <input type="text" class="input" v-model="projectName" id="projectName">
             </div>
             <div class="field">
-                <button class="button" type="submit">
+                <button class="button" type="submit" style="background-color: darkblue; color: white; font-weight: bolder;">
                     salvar
                 </button>
             </div>
