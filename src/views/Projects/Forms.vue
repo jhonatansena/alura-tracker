@@ -1,7 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <section class="project">
-        <h1 class="title">Projeto</h1>
+    <section>
         <form @submit.prevent="save">
             <div class="field">
                 <label for="projectName" class="label">Nome do Projeto</label>
@@ -29,8 +28,25 @@ export default defineComponent({
             projectName: ""
         }
     },
+    props: {
+        id: {
+            type: String
+        }
+    },
+    mounted () {
+        if(this.id) {
+            const project = this.store.state.projects.find((project) => project.id === this.id)
+            this.projectName = project?.name ?? ''
+        }
+    },
     methods: {
         save() {
+            if (this.id) {  
+                this.store.commit('UPDATE_PROJECT', {
+                    id: this.id,
+                    name: this.projectName
+                })
+            } else {
             const project: IProject = {
                 id: new Date().getTime().toString(),
                 name: this.projectName,
@@ -38,8 +54,10 @@ export default defineComponent({
             }
 
             this.store.commit('ADD_PROJECT', project)
+            }
+
             this.projectName=''
-            this.$router.push('/projects')
+            this.$router.push('/projects')     
         },
         formatDate(date: Date): string {
             const day = String(date.getDate()).padStart(2, '0')
@@ -56,8 +74,3 @@ export default defineComponent({
     }
 })
 </script>
-<style>
-.project {
-    padding: 1.25rem;
-}
-</style>
