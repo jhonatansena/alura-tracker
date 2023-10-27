@@ -29,6 +29,11 @@
                             </span>
 
                         </router-link>
+                        <button class="button ml-2 is-danger" @click="remove(project.id)">
+                            <span class="icon is-small">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -43,10 +48,16 @@ import { useStore } from '@/store'
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: 'List',
+    methods: {
+        remove (projectId: string) {
+            this.store.commit('DELETE_PROJECT', projectId)
+        }
+    },
     setup () {
         const store = useStore()
         return {
-            projects: computed(() => store.state.projects)
+            projects: computed(() => store.state.projects),
+            store,
         }
     }
 })
