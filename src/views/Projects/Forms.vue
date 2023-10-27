@@ -19,6 +19,7 @@
 import { defineComponent } from 'vue'
 import IProject from '../../interfaces/IProject'
 import { useStore } from '@/store'
+import { ADD_PROJECT, UPDATE_PROJECT } from '@/store/mutationTypes'
 
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
@@ -42,7 +43,7 @@ export default defineComponent({
     methods: {
         save() {
             if (this.id) {  
-                this.store.commit('UPDATE_PROJECT', {
+                this.store.commit(UPDATE_PROJECT, {
                     id: this.id,
                     name: this.projectName
                 })
@@ -53,7 +54,7 @@ export default defineComponent({
                 startDate: this.formatDate(new Date())
             }
 
-            this.store.commit('ADD_PROJECT', project)
+            this.store.commit(ADD_PROJECT, project)
             }
 
             this.projectName=''
