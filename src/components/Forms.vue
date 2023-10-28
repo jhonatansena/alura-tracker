@@ -38,7 +38,7 @@ import { useStore } from 'vuex'
 import { useStore as anotherStore } from '@/store'
 import  { key } from '@/store'
 import {  NotificationType } from '@/interfaces/INotification'
-import { notificationMixin } from '@/mixin/notify'
+import userNotification from '@/hooks/notify'
 export default defineComponent({
     data() {
         return {
@@ -52,7 +52,6 @@ export default defineComponent({
     components: {
         PlaybackControls
     },
-    mixins: [notificationMixin],
     methods: {
         finishTask (timeElapsed: number): void {
             const project = this.projects.find((p) => p.id == this.idProject)
@@ -76,9 +75,11 @@ export default defineComponent({
     setup () {
         const store = useStore(key)
         const storeNotification = anotherStore()
+        const { notify } = userNotification()
         return {
             projects: computed(() => store.state.projects),
-            storeNotification
+            storeNotification,
+            notify,
         }
     }
 })
