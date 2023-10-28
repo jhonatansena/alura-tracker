@@ -19,7 +19,8 @@
 import { defineComponent } from 'vue'
 import IProject from '../../interfaces/IProject'
 import { useStore } from '@/store'
-import { ADD_PROJECT, UPDATE_PROJECT } from '@/store/mutationTypes'
+import { ADD_PROJECT, NOTIFY, UPDATE_PROJECT } from '@/store/mutationTypes'
+import { INotification, NotificationType } from '@/interfaces/INotification'
 
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
@@ -56,7 +57,15 @@ export default defineComponent({
 
             this.store.commit(ADD_PROJECT, project)
             }
-
+            const notification: INotification = 
+            {
+                id: Number(new Date().getTime().toString()),
+                title: 'Novo projecto adicionado',
+                text: 'Prontinho ;) seu projeto já está disponível',
+                type: NotificationType.SUCCESS,
+            }
+            
+            this.store.commit(NOTIFY, notification)
             this.projectName=''
             this.$router.push('/projects')     
         },
