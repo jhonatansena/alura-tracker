@@ -17,6 +17,9 @@
   import Task from '../components/Task.vue';
   import ITask from '../interfaces/ITask'
   import Box from '../components/Box.vue';
+  import userNotification from '@/hooks/notify'
+import { NotificationType } from '@/interfaces/INotification';
+
   
   export default defineComponent({
       name: 'App',
@@ -38,8 +41,22 @@
       },
       methods: {
         saveTask(task: ITask): void {
+          if (!task.description) {
+            this.notify(
+                'Descrição faltando', 
+                'OPs!!! Você precisa informar um descrição para a tarefa',
+                NotificationType.WARNING
+                )
+            return
+          }
           this.tasks.push(task)
         },
+      },
+      setup () {
+        const { notify } = userNotification()
+        return {
+          notify
+        }
       }
   });
 
