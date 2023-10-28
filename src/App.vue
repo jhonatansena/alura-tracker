@@ -4,6 +4,7 @@
         <SideBar @toThemeChanged="changeTheme"/>
     </div>
     <div class="column is-three-quarter content">
+      <Notifications></Notifications>
       <router-view></router-view>
     </div>
 
@@ -13,6 +14,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import SideBar from './components/SideBar.vue';
+import Notifications from './components/Notifications.vue';
 
 export default defineComponent({
     name: 'App',
@@ -22,7 +24,7 @@ export default defineComponent({
       }
     },
     // eslint-disable-next-line vue/no-unused-components
-    components: { SideBar },
+    components: { SideBar,  Notifications },
     methods: {
       changeTheme (modeDarkActive: boolean): void {
           this.modeDarkActive = modeDarkActive
