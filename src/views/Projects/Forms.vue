@@ -19,8 +19,9 @@
 import { defineComponent } from 'vue'
 import IProject from '../../interfaces/IProject'
 import { useStore } from '@/store'
-import { ADD_PROJECT, NOTIFY, UPDATE_PROJECT } from '@/store/mutationTypes'
-import { INotification, NotificationType } from '@/interfaces/INotification'
+import { ADD_PROJECT, UPDATE_PROJECT } from '@/store/mutationTypes'
+import { NotificationType } from '@/interfaces/INotification'
+import { notificationMixin } from '@/mixin/notify'
 
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
@@ -35,49 +36,47 @@ export default defineComponent({
             type: String
         }
     },
-    mounted () {
-        if(this.id) {
-            const project = this.store.state.projects.find((project) => project.id === this.id)
-            this.projectName = project?.name ?? ''
+    mixins: [notificationMixin],
+    mounted() {
+        if (this.id) {
+            const project=this.store.state.projects.find((project) => project.id===this.id)
+            this.projectName=project?.name??''
         }
     },
     methods: {
         save() {
-            if (this.id) {  
+            if (this.id) {
                 this.store.commit(UPDATE_PROJECT, {
                     id: this.id,
                     name: this.projectName
                 })
             } else {
-            const project: IProject = {
-                id: new Date().getTime().toString(),
-                name: this.projectName,
-                startDate: this.formatDate(new Date())
-            }
+                const project: IProject={
+                    id: new Date().getTime().toString(),
+                    name: this.projectName,
+                    startDate: this.formatDate(new Date())
+                }
 
-            this.store.commit(ADD_PROJECT, project)
+                this.store.commit(ADD_PROJECT, project)
             }
-            const notification: INotification = 
-            {
-                id: Number(new Date().getTime().toString()),
-                title: 'Novo projecto adicionado',
-                text: 'Prontinho ;) seu projeto já está disponível',
-                type: NotificationType.SUCCESS,
-            }
-            
-            this.store.commit(NOTIFY, notification)
+            this.notify(
+                'Novo projecto adicionado',
+                'Prontinho ;) seu projeto já está disponível',
+                NotificationType.SUCCESS
+            )
+
             this.projectName=''
-            this.$router.push('/projects')     
+            this.$router.push('/projects')
         },
         formatDate(date: Date): string {
-            const day = String(date.getDate()).padStart(2, '0')
-            const month = String(date.getMonth() + 1).padStart(2, '0')
-            const year = date.getFullYear()
+            const day=String(date.getDate()).padStart(2, '0')
+            const month=String(date.getMonth()+1).padStart(2, '0')
+            const year=date.getFullYear()
             return `${day}/${month}/${year}`
-         }
+        }
     },
-    setup () {
-        const store = useStore()
+    setup() {
+        const store=useStore()
         return {
             store,
         }
