@@ -35,7 +35,11 @@
 import { computed, defineComponent } from 'vue'
 import PlaybackControls from './PlaybackControls.vue'
 import { useStore } from 'vuex'
+import { useStore as anotherStore } from '@/store'
+
 import  { key } from '@/store'
+import { INotification, NotificationType } from '@/interfaces/INotification'
+import { NOTIFY } from '@/store/mutationTypes'
 
 export default defineComponent({
     data() {
@@ -52,6 +56,20 @@ export default defineComponent({
     },
     methods: {
         finishTask (timeElapsed: number): void {
+            const project = this.projects.find((p) => p.id == this.idProject)
+
+            if (!project) {
+                const notification: INotification = 
+            {
+                id: Number(new Date().getTime().toString()),
+                title: 'Erro ao adicionar projeto',
+                text: 'OPs ;) Você precisa escolher um projeto antes de finalizar uma tarefa',
+                type: NotificationType.DANGER,
+            }
+            
+            this.storeNotification.commit(NOTIFY, notification)
+            return
+            }
                this.$emit('toSaveTask', {
                timeInSeconds: timeElapsed,
                description: this.description,
@@ -62,8 +80,10 @@ export default defineComponent({
     },
     setup () {
         const store = useStore(key)
+        const storeNotification = anotherStore()
         return {
-            projects: computed(() => store.state.projects)
+            projects: computed(() => store.state.projects),
+            storeNotification
         }
     }
 })
