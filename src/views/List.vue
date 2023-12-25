@@ -61,7 +61,7 @@ export default defineComponent({
             }
         },
         remove(projectId: string) {
-            this.store.commit(DELETE_PROJECT, projectId)
+            this.store.dispatch(DELETE_PROJECT, projectId)
             this.notify('Projeto Deletado!', 'Projeto deletado com sucesso!', NotificationType.SUCCESS)
                 
         }
