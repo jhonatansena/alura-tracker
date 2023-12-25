@@ -1,9 +1,9 @@
 import IProject from "@/interfaces/IProject";
 import { InjectionKey } from "vue";
 import { Store, createStore, useStore as vuexUseStore  } from "vuex";
-import { ADD_PROJECT, UPDATE_PROJECT, DELETE_PROJECT, NOTIFY, DEFINY_PROJECTS } from "./mutationTypes";
+import { ADD_PROJECT, UPDATE_PROJECT, NOTIFY, DEFINY_PROJECTS, DELETE_PROJECT } from "./mutationTypes";
 import { INotification } from "@/interfaces/INotification";
-import { GET_PROJECTS } from "./actionTypes";
+import { GET_PROJECTS, ADD_PROJECT_ACTION, DELETE_PROJECT_ACTION} from "./actionTypes";
 import clientHttp from "@/http";
 
 interface State {
@@ -51,13 +51,16 @@ export const store = createStore<State>({
                 throw new Error('Erro ao objter projetos')
             }
         },
-        async [ADD_PROJECT]({ commit }, project: IProject) {
+        async [ADD_PROJECT_ACTION](context, project: IProject) {
+                return clientHttp.post('/projects', project)
+           
+        },
+        async [DELETE_PROJECT_ACTION]({ commit }, projectId: number) {
             try {
-                const { data } = await clientHttp.post('/projects', project)
-                commit(ADD_PROJECT, data)
-                return data
-            } catch {
-                throw new Error('Erro ao criar projeto')
+                await clientHttp.delete(`/projects/${projectId}`)
+                commit(ADD_PROJECT_ACTION, projectId)
+            } catch (error) {
+                throw new Error('Erro ao deletar projeto')
             }
         }
     }
