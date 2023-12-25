@@ -47,8 +47,17 @@ export const store = createStore<State>({
 
                 commit(DEFINY_PROJECTS, data)
                 return data
-            } catch (error) {
+            } catch {
                 throw new Error('Erro ao objter projetos')
+            }
+        },
+        async [ADD_PROJECT]({ commit }, project: IProject) {
+            try {
+                const { data } = await clientHttp.post('/projects', project)
+                commit(ADD_PROJECT, data)
+                return data
+            } catch {
+                throw new Error('Erro ao criar projeto')
             }
         }
     }

@@ -19,7 +19,8 @@
 import { defineComponent } from 'vue'
 import IProject from '../../interfaces/IProject'
 import { useStore } from '@/store'
-import { ADD_PROJECT, UPDATE_PROJECT } from '@/store/mutationTypes'
+import { UPDATE_PROJECT } from '@/store/mutationTypes'
+import { ADD_PROJECT } from '@/store/actionTypes'
 import { NotificationType } from '@/interfaces/INotification'
 import { notificationMixin } from '@/mixin/notify'
 
@@ -57,7 +58,7 @@ export default defineComponent({
                     startDate: this.formatDate(new Date())
                 }
 
-                this.store.commit(ADD_PROJECT, project)
+                this.store.dispatch(ADD_PROJECT, project)
             }
             this.notify(
                 'Novo projecto adicionado',
