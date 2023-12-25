@@ -52,7 +52,12 @@ export const store = createStore<State>({
             }
         },
         async [ADD_PROJECT_ACTION](context, project: IProject) {
-                return clientHttp.post('/projects', project)
+            try {
+                const { data } = await clientHttp.post('/projects', project)
+                return data
+            } catch (error) {
+                throw new Error('Erro ao adicionar projeto')
+            }
            
         },
         async [DELETE_PROJECT_ACTION]({ commit }, projectId: number) {

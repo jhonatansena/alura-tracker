@@ -20,7 +20,7 @@ import { defineComponent } from 'vue'
 import IProject from '../../interfaces/IProject'
 import { useStore } from '@/store'
 import { UPDATE_PROJECT } from '@/store/mutationTypes'
-import { ADD_PROJECT } from '@/store/actionTypes'
+import { ADD_PROJECT_ACTION } from '@/store/actionTypes'
 import { NotificationType } from '@/interfaces/INotification'
 import { notificationMixin } from '@/mixin/notify'
 
@@ -45,36 +45,46 @@ export default defineComponent({
         }
     },
     methods: {
-        save() {
+        async save() {
             if (this.id) {
                 this.store.commit(UPDATE_PROJECT, {
                     id: this.id,
                     name: this.projectName
                 })
             } else {
-                const project: IProject={
-                    id: new Date().getTime().toString(),
-                    name: this.projectName,
-                    startDate: this.formatDate(new Date())
-                }
+                try {
+        const project: IProject = {
+            id: new Date().getTime().toString(),
+            name: this.projectName,
+            startDate: this.formatDate(new Date())
+        };
 
-                this.store.dispatch(ADD_PROJECT, project)
-            }
-            this.notify(
-                'Novo projecto adicionado',
-                'Prontinho ;) seu projeto já está disponível',
-                NotificationType.SUCCESS
-            )
+        await this.store.dispatch(ADD_PROJECT_ACTION, project)
 
-            this.projectName=''
-            this.$router.push('/projects')
-        },
-        formatDate(date: Date): string {
-            const day=String(date.getDate()).padStart(2, '0')
-            const month=String(date.getMonth()+1).padStart(2, '0')
-            const year=date.getFullYear()
-            return `${day}/${month}/${year}`
-        }
+        this.notify(
+            'Novo projecto adicionado',
+            'Prontinho ;) seu projeto já está disponível',
+            NotificationType.SUCCESS
+        );
+
+        this.projectName = '';
+        this.$router.push('/projects');
+    } catch (error) {
+
+        this.notify(
+            'Erro ao adicionar projeto',
+            'Houve um erro ao tentar adicionar o projeto. Por favor, tente novamente.',
+            NotificationType.DANGER
+        )
+    }
+    }
+    },
+    formatDate(date: Date): string {
+        const day=String(date.getDate()).padStart(2, '0')
+        const month=String(date.getMonth()+1).padStart(2, '0')
+        const year=date.getFullYear()
+        return `${day}/${month}/${year}`
+    }
     },
     setup() {
         const store=useStore()
