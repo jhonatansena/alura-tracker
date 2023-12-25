@@ -1,0 +1,3 @@
+const GET_PROJECTS = "GET_PROJECTS"
+
+export { GET_PROJECTS }

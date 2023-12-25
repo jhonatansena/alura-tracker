@@ -1,8 +1,10 @@
 import IProject from "@/interfaces/IProject";
 import { InjectionKey } from "vue";
 import { Store, createStore, useStore as vuexUseStore  } from "vuex";
-import { ADD_PROJECT, UPDATE_PROJECT, DELETE_PROJECT, NOTIFY } from "./mutationTypes";
+import { ADD_PROJECT, UPDATE_PROJECT, DELETE_PROJECT, NOTIFY, DEFINY_PROJECTS } from "./mutationTypes";
 import { INotification } from "@/interfaces/INotification";
+import { GET_PROJECTS } from "./actionTypes";
+import clientHttp from "@/http";
 
 interface State {
     projects: IProject[]
@@ -33,6 +35,21 @@ export const store = createStore<State>({
             setTimeout(() => {
                 state.notifications = state.notifications.filter(notification => notification.id != newNotification.id)
             }, 3000)
+        },
+        [DEFINY_PROJECTS](state, projects: IProject[]) {
+            state.projects = projects
+        }
+    },
+    actions: {
+        async [GET_PROJECTS]({ commit }) {
+            try {
+                const { data } = await clientHttp.get('projects')
+
+                commit(DEFINY_PROJECTS, data)
+                return data
+            } catch (error) {
+                throw new Error('Erro ao objter projetos')
+            }
         }
     }
 })

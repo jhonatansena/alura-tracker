@@ -47,6 +47,7 @@ import { useStore } from '@/store'
 import { DELETE_PROJECT } from '@/store/mutationTypes'
 import useNotification from '@/hooks/notify'
 import { NotificationType } from '@/interfaces/INotification'
+import { GET_PROJECTS } from '@/store/actionTypes'
 
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
@@ -67,6 +68,7 @@ export default defineComponent({
     },
     setup() {
         const store = useStore()
+        store.dispatch(GET_PROJECTS)
         const { notify } = useNotification()
          return {
             projects: computed(() => store.state.projects),
