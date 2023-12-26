@@ -19,8 +19,7 @@
 import { defineComponent } from 'vue'
 import IProject from '../../interfaces/IProject'
 import { useStore } from '@/store'
-import { UPDATE_PROJECT } from '@/store/mutationTypes'
-import { ADD_PROJECT_ACTION } from '@/store/actionTypes'
+import { ADD_PROJECT_ACTION, UPDATE_PROJECT_ACTION } from '@/store/actionTypes'
 import { NotificationType } from '@/interfaces/INotification'
 import { notificationMixin } from '@/mixin/notify'
 
@@ -41,16 +40,28 @@ export default defineComponent({
     mounted() {
         if (this.id) {
             const project=this.store.state.projects.find((project) => project.id===this.id)
-            this.projectName=project?.name??''
+            this.projectName=project?.name ?? ''
         }
     },
     methods: {
         async save() {
             if (this.id) {
-                this.store.commit(UPDATE_PROJECT, {
+               try {
+                this.store.dispatch(UPDATE_PROJECT_ACTION, {
                     id: this.id,
                     name: this.projectName
                 })
+                this.handleWithSuccess('Projeto editado com sucesso!',
+                'Protinho, projeto já está editado!',
+                NotificationType.SUCCESS
+                )
+               } catch {
+                this.notify(
+            'Erro ao editar projeto',
+            'Houve um erro ao tentar editar o projeto. Por favor, tente novamente.',
+            NotificationType.DANGER
+        )
+               }
             } else {
                 try {
         const project: IProject = {
@@ -60,16 +71,13 @@ export default defineComponent({
         };
 
         await this.store.dispatch(ADD_PROJECT_ACTION, project)
-
-        this.notify(
+        
+        this.handleWithSuccess(
             'Novo projecto adicionado',
             'Prontinho ;) seu projeto já está disponível',
             NotificationType.SUCCESS
         );
-
-        this.projectName = '';
-        this.$router.push('/projects');
-    } catch (error) {
+    } catch {
 
         this.notify(
             'Erro ao adicionar projeto',
@@ -78,6 +86,12 @@ export default defineComponent({
         )
     }
     }
+    },
+    handleWithSuccess(title: string, text: string, type: NotificationType) {
+        this.notify(title, text, type);
+
+        this.projectName = '';
+        this.$router.push('/projects');
     },
     formatDate(date: Date): string {
         const day=String(date.getDate()).padStart(2, '0')
