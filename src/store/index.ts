@@ -3,7 +3,7 @@ import { InjectionKey } from "vue";
 import { Store, createStore, useStore as vuexUseStore  } from "vuex";
 import { ADD_PROJECT, UPDATE_PROJECT, NOTIFY, DEFINY_PROJECTS, DELETE_PROJECT } from "./mutationTypes";
 import { INotification } from "@/interfaces/INotification";
-import { GET_PROJECTS, ADD_PROJECT_ACTION, DELETE_PROJECT_ACTION} from "./actionTypes";
+import { GET_PROJECTS, ADD_PROJECT_ACTION, DELETE_PROJECT_ACTION, UPDATE_PROJECT_ACTION} from "./actionTypes";
 import clientHttp from "@/http";
 
 interface State {
@@ -60,10 +60,19 @@ export const store = createStore<State>({
             }
            
         },
+        async [UPDATE_PROJECT_ACTION](context, project: IProject) {
+            try {
+                const { data } = await clientHttp.put(`/projects/${project.id}`, project)
+                return data
+            } catch (error) {
+                throw new Error('Erro ao adicionar projeto')
+            }
+           
+        },
         async [DELETE_PROJECT_ACTION]({ commit }, projectId: number) {
             try {
                 await clientHttp.delete(`/projects/${projectId}`)
-                commit(ADD_PROJECT_ACTION, projectId)
+                commit(DELETE_PROJECT, projectId)
             } catch (error) {
                 throw new Error('Erro ao deletar projeto')
             }
