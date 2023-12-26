@@ -44,10 +44,9 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useStore } from '@/store'
-import { DELETE_PROJECT } from '@/store/mutationTypes'
 import useNotification from '@/hooks/notify'
 import { NotificationType } from '@/interfaces/INotification'
-import { GET_PROJECTS } from '@/store/actionTypes'
+import { DELETE_PROJECT_ACTION, GET_PROJECTS } from '@/store/actionTypes'
 
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
@@ -61,8 +60,14 @@ export default defineComponent({
             }
         },
         remove(projectId: string) {
-            this.store.dispatch(DELETE_PROJECT, projectId)
+           try {
+            this.store.dispatch(DELETE_PROJECT_ACTION, projectId)
             this.notify('Projeto Deletado!', 'Projeto deletado com sucesso!', NotificationType.SUCCESS)
+           } catch {
+            this.notify(
+                'Erro ao excluir projeto', 
+                'Erro ao deletar projeto! Tente novamente mais tarde', NotificationType.DANGER)
+           }
                 
         }
     },
