@@ -101,7 +101,7 @@ import { NotificationType } from '@/interfaces/INotification';
         store.dispatch(GET_PROJECTS)
         const { notify } = userNotification()
          return {
-            tasks: computed(() => store.state.tasks),
+            tasks: computed(() => store.state.task.tasks),
             store,
             notify
         }
