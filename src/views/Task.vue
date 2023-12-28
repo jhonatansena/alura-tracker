@@ -12,23 +12,19 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { computed, defineComponent } from 'vue';
   import Forms from '../components/Forms.vue';
   import Task from '../components/Task.vue';
   import ITask from '../interfaces/ITask'
   import Box from '../components/Box.vue';
   import userNotification from '@/hooks/notify'
+import { useStore } from '@/store'
+import { GET_TASKS, ADD_TASK, GET_PROJECTS } from '@/store/actionTypes';
 import { NotificationType } from '@/interfaces/INotification';
 
   
   export default defineComponent({
       name: 'App',
-      data () {
-        return {
-          tasks: [] as ITask [],
-          modeDarkActive: false,
-        }
-      },
       // eslint-disable-next-line vue/no-unused-components
       components: { Forms, Task, Box },
       computed: {
@@ -40,8 +36,8 @@ import { NotificationType } from '@/interfaces/INotification';
         }
       },
       methods: {
-        saveTask(task: ITask): void {
-          if (!task.description) {
+         saveTask(task: ITask) {
+            if (!task.description) {
             this.notify(
                 'Descrição faltando', 
                 'OPs!!! Você precisa informar um descrição para a tarefa',
@@ -49,13 +45,19 @@ import { NotificationType } from '@/interfaces/INotification';
                 )
             return
           }
-          this.tasks.push(task)
+         this.store.dispatch(ADD_TASK, task)
         },
       },
       setup () {
+        const store = useStore()
+
+        store.dispatch(GET_TASKS)
+        store.dispatch(GET_PROJECTS)
         const { notify } = userNotification()
-        return {
-          notify
+         return {
+            tasks: computed(() => store.state.tasks),
+            store,
+            notify
         }
       }
   });
