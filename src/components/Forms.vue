@@ -39,6 +39,8 @@ import { useStore as anotherStore } from '@/store'
 import  { key } from '@/store'
 import {  NotificationType } from '@/interfaces/INotification'
 import userNotification from '@/hooks/notify'
+import ITask from '@/interfaces/ITask'
+import IProject from '@/interfaces/IProject'
 export default defineComponent({
     data() {
         return {
@@ -64,11 +66,14 @@ export default defineComponent({
                 )
             return
             }
-               this.$emit('toSaveTask', {
-               timeInSeconds: timeElapsed,
-               description: this.description,
-               project: this.projects.find(proj => proj.id === this.idProject)
-            })
+
+    
+            const task: ITask = {
+                timeInSeconds: timeElapsed,
+                description: this.description,
+                project: this.projects.find((p) => p.id === this.idProject) as IProject
+            }
+               this.$emit('toSaveTask', task)
             this.description = ''
         }
     },
