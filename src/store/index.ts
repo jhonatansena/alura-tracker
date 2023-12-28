@@ -61,12 +61,7 @@ export const store = createStore<State>({
             state.tasks = tasks
         },
         [ADD_TASK_MUTATION](state, task: ITask) {
-            if (task.project && task.project.id) {
-                state.tasks.push(task);
-              } else {
-                console.error('Objeto de tarefa inválido:', task);
-                // Trate o caso em que o objeto de tarefa é inválido
-              }
+            state.tasks.push(task)
         }
     },
     actions: {
@@ -101,17 +96,10 @@ export const store = createStore<State>({
         },
         async [ADD_TASK]({ commit }, task: ITask) {
             try {
-                if (!task.project) {
-                    throw new Error('Projeto não informado')
-                }
                 const { data } = await clientHttp.post('/tasks', task)
-                console.log('RESPOSTA DO BACKEND', data)
-
                 commit(ADD_TASK_MUTATION, data)
                 return data
             } catch (error) {
-                console.error('Erro ao adicionar tarefa:', error)
-
                 throw new Error('Erro ao adicionar tarefa')
             }
            
