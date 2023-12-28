@@ -8,7 +8,8 @@ import {
     DEFINY_PROJECTS, 
     DELETE_PROJECT, 
     DEFINY_TASK, 
-    ADD_TASK_MUTATION
+    ADD_TASK_MUTATION,
+    UPDATE_TASK_MUTATION
     } from "./mutationTypes";
 import { INotification } from "@/interfaces/INotification";
 import { 
@@ -17,7 +18,8 @@ import {
     DELETE_PROJECT_ACTION, 
     UPDATE_PROJECT_ACTION,
     GET_TASKS, 
-    ADD_TASK
+    ADD_TASK,
+    UPDATE_TASK_ACTION
     } from "./actionTypes";
 import clientHttp from "@/http";
 import ITask from "@/interfaces/ITask";
@@ -43,6 +45,10 @@ export const store = createStore<State>({
         [UPDATE_PROJECT](state, project: IProject) {
             const index = state.projects.findIndex(proj => proj.id === project.id)
             state.projects[index] = project
+        },
+        [UPDATE_TASK_MUTATION](state, updateTask: ITask) {
+            const index = state.tasks.findIndex(task => task.id === updateTask.id)
+            state.tasks[index] = updateTask
         },
         [DELETE_PROJECT](state, projectId) {
             state.projects = state.projects.filter(proj => proj.id !== projectId)
@@ -112,6 +118,14 @@ export const store = createStore<State>({
                 throw new Error('Erro ao adicionar projeto')
             }
            
+        },
+        async [UPDATE_TASK_ACTION]({ commit }, task: ITask) {
+            try {
+                await clientHttp.put(`/tasks/${task.id}`, task)
+                commit(UPDATE_TASK_MUTATION, task)
+            } catch (error) {
+                throw new Error('Erro ao atualizar tarefa')
+            }
         },
         async [DELETE_PROJECT_ACTION]({ commit }, projectId: number) {
             try {
