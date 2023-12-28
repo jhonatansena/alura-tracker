@@ -69,6 +69,7 @@ export default defineComponent({
 
     
             const task: ITask = {
+                id: Math.random() * (10000000 - 1) + 1,
                 timeInSeconds: timeElapsed,
                 description: this.description,
                 project: this.projects.find((p) => p.id === this.idProject) as IProject
