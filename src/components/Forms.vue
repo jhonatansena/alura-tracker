@@ -83,7 +83,7 @@ export default defineComponent({
         const storeNotification = anotherStore()
         const { notify } = userNotification()
         return {
-            projects: computed(() => store.state.projects),
+            projects: computed(() => store.state.project.projects),
             storeNotification,
             notify,
         }
