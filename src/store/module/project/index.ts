@@ -57,7 +57,7 @@ export const project: Module<StateProject, State> = {
         },
         async [UPDATE_PROJECT_ACTION](context, project: IProject) {
             try {
-                const { data } = await clientHttp.put(`/projects/${project.id}`, project)
+                const { data } = await clientHttp.patch(`/projects/${project.id}`, project)
                 return data
             } catch (error) {
                 throw new Error('Erro ao adicionar projeto')
