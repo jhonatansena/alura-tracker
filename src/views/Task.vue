@@ -3,7 +3,7 @@
       <div class="column is-three-quarter content">
         <Forms @toSaveTask="saveTask"/>
         <div class="lista">
-          <Task v-for="task in reverseTasks" :key="task.id" :task="task" @toclicledTask="handleSelectTask"/>
+          <Task v-for="(task, index) in reverseTasks" :key="index" :task="task" @toclicledTask="handleSelectTask"/>
           <Box v-if="emptyList">
           Você não está muito produtivo hoje :(
           </Box>
@@ -99,9 +99,10 @@ import { NotificationType } from '@/interfaces/INotification';
 
         store.dispatch(GET_TASKS)
         store.dispatch(GET_PROJECTS)
+        const tasks = computed(() => store.state.task.tasks)
         const { notify } = userNotification()
          return {
-            tasks: computed(() => store.state.task.tasks),
+            tasks,
             store,
             notify
         }
