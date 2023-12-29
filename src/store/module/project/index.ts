@@ -20,6 +20,9 @@ export interface StateProject {
 }
 
 export const project: Module<StateProject, State> = {
+    state: {
+        projects: []
+    },
     mutations: {
         [ADD_PROJECT](state, project: IProject) {
             state.projects.push(project)

@@ -11,6 +11,9 @@ export interface StateTask {
 }
 
 export const task: Module<StateTask, State> = {
+    state: {
+        tasks: []
+    },
     mutations: {
         [UPDATE_TASK_MUTATION](state, updateTask: ITask) {
             const index = state.tasks.findIndex(task => task.id === updateTask.id)
