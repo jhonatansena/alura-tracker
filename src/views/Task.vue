@@ -2,12 +2,21 @@
 <template>
       <div class="column is-three-quarter content">
         <Forms @toSaveTask="saveTask"/>
+        
         <div class="lista">
-          <Task v-for="(task, index) in reverseTasks" :key="index" :task="task" @toclicledTask="handleSelectTask"/>
-          <Box v-if="emptyList">
+           <Box v-if="emptyList">
           Você não está muito produtivo hoje :(
           </Box>
+            <div class="control has-icons-left">
+              <input class="input" type="text" placeholder="Digite para filtrar" v-model="filter">
+              <span class="icon is-small is-left">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+            <br>
+            <Task v-for="(task, index) in reverseTasks" :key="index" :task="task" @toclicledTask="handleSelectTask"/>
         </div>
+         
         <div class="modal" :class="{ 'is-active' :selectedTask }" v-if="selectedTask">
         <div class="modal-background"></div>
         <div class="modal-card">
@@ -31,7 +40,7 @@
   </template>
   
   <script lang="ts">
-  import { computed, defineComponent } from 'vue';
+  import { computed, defineComponent, ref, watchEffect } from 'vue';
   import Forms from '../components/Forms.vue';
   import Task from '../components/Task.vue';
   import ITask from '../interfaces/ITask'
@@ -96,15 +105,24 @@ import { NotificationType } from '@/interfaces/INotification';
       },
       setup () {
         const store = useStore()
+        const { notify } = userNotification()
+        const tasks = computed(() => 
+        store.state.task.tasks)
+
+        const filter = ref('')
 
         store.dispatch(GET_TASKS)
         store.dispatch(GET_PROJECTS)
-        const tasks = computed(() => store.state.task.tasks)
-        const { notify } = userNotification()
+
+        watchEffect(() => {
+          store.dispatch(GET_TASKS, filter.value)
+        })
+
          return {
             tasks,
             store,
-            notify
+            notify,
+            filter
         }
       }
   });

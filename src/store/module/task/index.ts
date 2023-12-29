@@ -27,9 +27,11 @@ export const task: Module<StateTask, State> = {
         }
     },
     actions: {
-        async [GET_TASKS]({ commit }) {
+        async [GET_TASKS]({ commit }, filter: string) {
             try {
-                const { data } = await clientHttp.get('tasks')
+                const URL = filter ? `tasks?description=${filter}` : 'tasks'
+                console.log(URL)
+                const { data } = await clientHttp.get(URL)
 
                 commit(DEFINY_TASK, data)
                 return data
