@@ -29,16 +29,15 @@ export default defineComponent({
         Timer, 
         Box
     },
-    methods: {
-        clickedTask(): void {
-            this.$emit('toclicledTask', this.task)
-        }
-    },
     props: {
         task: {
             type: Object as PropType<ITask>,
             required: true,
         }
+    },
+    setup(props, { emit }) {
+       const clickedTask = (): void => emit('toclicledTask', props.task)
+       return { clickedTask }
     }
 })
 </script>
