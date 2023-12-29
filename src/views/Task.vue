@@ -16,10 +16,7 @@
             <br>
             <Task v-for="(task, index) in reverseTasks" :key="index" :task="task" @toclicledTask="handleSelectTask"/>
         </div>
-         
-        <div class="modal" :class="{ 'is-active' :selectedTask }" v-if="selectedTask">
-        <div class="modal-background"></div>
-        <div class="modal-card">
+        <Modal :show="!!selectedTask">
           <header class="modal-card-head">
             <p class="modal-card-title">Editar tarefa</p>
             <button class="delete"  @click="closeModal" aria-label="close"></button>
@@ -27,15 +24,14 @@
           <section class="modal-card-body">
             <div class="field">
                 <label for="taskDescription" class="label">Descrição da tarefa</label>
-                <input type="text" class="input" v-model="selectedTask.description" id="taskDescription">
+                <input type="text" class="input" v-if="selectedTask" v-model="selectedTask.description" id="taskDescription">
             </div>
           </section>
           <footer class="modal-card-foot">
             <button @click="updateTask" class="button is-success" >Salvar alterações</button>
             <button @click="closeModal" class="button">Cancelar</button>
           </footer>
-        </div>
-        </div>
+        </Modal>
       </div>
   </template>
   
@@ -49,12 +45,13 @@
 import { useStore } from '@/store'
 import { GET_TASKS, ADD_TASK, GET_PROJECTS, UPDATE_TASK_ACTION } from '@/store/actionTypes';
 import { NotificationType } from '@/interfaces/INotification';
+import Modal from '@/components/Modal.vue';
 
   
   export default defineComponent({
       name: 'App',
       // eslint-disable-next-line vue/no-unused-components
-      components: { Forms, Task, Box },
+      components: { Forms, Task, Box, Modal },
       data () {
         return {
           selectedTask: null as ITask | null  
