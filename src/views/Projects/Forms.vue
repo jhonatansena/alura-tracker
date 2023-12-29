@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import IProject from '../../interfaces/IProject'
 import { useStore } from '@/store'
 import { ADD_PROJECT_ACTION, UPDATE_PROJECT_ACTION } from '@/store/actionTypes'
@@ -26,23 +26,12 @@ import { notificationMixin } from '@/mixin/notify'
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: 'Forms',
-    data() {
-        return {
-            projectName: ""
-        }
-    },
     props: {
         id: {
             type: String
         }
     },
     mixins: [notificationMixin],
-    mounted() {
-        if (this.id) {
-            const project=this.store.state.project.projects.find((project) => project.id===this.id)
-            this.projectName=project?.name ?? ''
-        }
-    },
     methods: {
         async save() {
             if (this.id) {
@@ -100,10 +89,16 @@ export default defineComponent({
         return `${day}/${month}/${year}`
     }
     },
-    setup() {
-        const store=useStore()
+    setup(props) {
+        const store = useStore()
+        const projectName = ref("")
+        if (props.id) {
+            const project = store.state.project.projects.find((project) => project.id === props.id)
+            projectName.value = project?.name ?? ''
+        }
         return {
             store,
+            projectName
         }
     }
 })
