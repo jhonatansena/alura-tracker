@@ -17,20 +17,20 @@
             <Task v-for="(task, index) in reverseTasks" :key="index" :task="task" @toclicledTask="handleSelectTask"/>
         </div>
         <Modal :show="!!selectedTask">
-          <header class="modal-card-head">
+          <template v-slot:header>
             <p class="modal-card-title">Editar tarefa</p>
             <button class="delete"  @click="closeModal" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body">
+          </template>
+          <template v-slot:body>
             <div class="field">
                 <label for="taskDescription" class="label">Descrição da tarefa</label>
                 <input type="text" class="input" v-if="selectedTask" v-model="selectedTask.description" id="taskDescription">
             </div>
-          </section>
-          <footer class="modal-card-foot">
+          </template>
+          <template v-slot:footer>
             <button @click="updateTask" class="button is-success" >Salvar alterações</button>
             <button @click="closeModal" class="button">Cancelar</button>
-          </footer>
+          </template>
         </Modal>
       </div>
   </template>
