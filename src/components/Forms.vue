@@ -65,7 +65,7 @@ export default defineComponent({
             if (!project) {
             notify(
                 'Erro ao adicionar projeto', 
-                'OPs!!! Você precisa escolher um projedto antes de finalizar uma tarefa',
+                'Ops!!! Você precisa escolher um projeto antes de finalizar uma tarefa',
                 NotificationType.DANGER
                 )
             return
