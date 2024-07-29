@@ -70,7 +70,6 @@ export default defineComponent({
                 )
             return
             }
-
     
             const task: ITask = {
                 id: Math.random() * (10000000 - 1) + 1,
