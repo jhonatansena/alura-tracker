@@ -25,7 +25,6 @@
                         <router-link :to="`/projects/${project.id}`" class="button">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
-
                             </span>
 
                         </router-link>
